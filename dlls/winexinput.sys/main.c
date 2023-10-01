@@ -302,13 +302,14 @@ static NTSTATUS try_complete_pending_read(DEVICE_OBJECT *device, IRP *irp)
         return STATUS_DELETE_PENDING;
     }
 
+    TRACE("0");
     if (!pending) return STATUS_PENDING;
-
+    TRACE("1");
     /* only one read at a time per device from hidclass.sys design */
     if (pending_is_gamepad == impl->is_gamepad) ERR("multiple read requests!\n");
     gamepad_irp = impl->is_gamepad ? irp : pending;
     xinput_irp = impl->is_gamepad ? pending : irp;
-
+    TRACE("2");
     /* pass xinput irp down, and complete gamepad irp on its way back */
     IoCopyCurrentIrpStackLocationToNext(xinput_irp);
     IoSetCompletionRoutine(xinput_irp, read_completion, gamepad_irp, TRUE, TRUE, TRUE);
@@ -398,11 +399,10 @@ static NTSTATUS WINAPI internal_ioctl(DEVICE_OBJECT *device, IRP *irp)
     }
 
     TRACE("device %p, irp %p, code %#lx, bus_device %p.\n", device, irp, code, fdo->bus_device);
-    TRACE("0");
+    
     if (code == IOCTL_HID_READ_REPORT) return try_complete_pending_read(device, irp);
-    TRACE("1");
+    
     if (impl->is_gamepad) return gamepad_internal_ioctl(device, irp);
-    TRACE("2");
 
     IoSkipCurrentIrpStackLocation(irp);
     return IoCallDriver(fdo->bus_device, irp);
