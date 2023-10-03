@@ -1531,6 +1531,8 @@ static WINE_MODREF *alloc_module( HMODULE hModule, const UNICODE_STRING *nt_name
             wm->ldr.EntryPoint = (char *)hModule + nt->OptionalHeader.AddressOfEntryPoint;
     }
 
+    TRACE_(loaddll)( "Building Module: %s", debugstr_w(wm->ldr.FullDllName.Buffer));
+
     InsertTailList(&NtCurrentTeb()->Peb->LdrData->InLoadOrderModuleList,
                    &wm->ldr.InLoadOrderLinks);
     InsertTailList(&NtCurrentTeb()->Peb->LdrData->InMemoryOrderModuleList,
@@ -2272,6 +2274,8 @@ static NTSTATUS build_module( LPCWSTR load_path, const UNICODE_STRING *nt_name, 
     WINE_MODREF *wm;
     NTSTATUS status;
     SIZE_T map_size;
+
+    TRACE_(loaddll)( "Starting Building Module" );
 
     if (!(nt = RtlImageNtHeader( *module ))) return STATUS_INVALID_IMAGE_FORMAT;
 
