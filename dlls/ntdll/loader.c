@@ -1531,8 +1531,6 @@ static WINE_MODREF *alloc_module( HMODULE hModule, const UNICODE_STRING *nt_name
             wm->ldr.EntryPoint = (char *)hModule + nt->OptionalHeader.AddressOfEntryPoint;
     }
 
-    TRACE_(loaddll)( "Building Module: %s", debugstr_w(wm->ldr.FullDllName.Buffer));
-
     InsertTailList(&NtCurrentTeb()->Peb->LdrData->InLoadOrderModuleList,
                    &wm->ldr.InLoadOrderLinks);
     InsertTailList(&NtCurrentTeb()->Peb->LdrData->InMemoryOrderModuleList,
@@ -2275,8 +2273,6 @@ static NTSTATUS build_module( LPCWSTR load_path, const UNICODE_STRING *nt_name, 
     NTSTATUS status;
     SIZE_T map_size;
 
-    TRACE_(loaddll)( "Starting Building Module" );
-
     if (!(nt = RtlImageNtHeader( *module ))) return STATUS_INVALID_IMAGE_FORMAT;
 
     map_size = (nt->OptionalHeader.SizeOfImage + page_size - 1) & ~(page_size - 1);
@@ -2751,6 +2747,7 @@ static NTSTATUS load_native_dll( LPCWSTR load_path, const UNICODE_STRING *nt_nam
                                  const SECTION_IMAGE_INFORMATION *image_info, const struct file_id *id,
                                  DWORD flags, BOOL system, WINE_MODREF** pwm )
 {
+    TRACE("%s", debugstr_us(nt_name)); 
     void *module = NULL;
     SIZE_T len = 0;
     NTSTATUS status = NtMapViewOfSection( mapping, NtCurrentProcess(), &module, 0, 0, NULL, &len,
