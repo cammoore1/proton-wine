@@ -2747,7 +2747,7 @@ static NTSTATUS load_native_dll( LPCWSTR load_path, const UNICODE_STRING *nt_nam
                                  const SECTION_IMAGE_INFORMATION *image_info, const struct file_id *id,
                                  DWORD flags, BOOL system, WINE_MODREF** pwm )
 {
-    TRACE("%s\n", debugstr_us(nt_name)); 
+    TRACE("load_native_dll: %s\n", debugstr_us(nt_name)); 
     void *module = NULL;
     SIZE_T len = 0;
     NTSTATUS status = NtMapViewOfSection( mapping, NtCurrentProcess(), &module, 0, 0, NULL, &len,
@@ -2780,7 +2780,7 @@ static NTSTATUS load_native_dll( LPCWSTR load_path, const UNICODE_STRING *nt_nam
 static NTSTATUS load_so_dll( LPCWSTR load_path, const UNICODE_STRING *nt_name,
                              DWORD flags, WINE_MODREF **pwm )
 {
-    TRACE("%s\n", debugstr_us(nt_name)); 
+    TRACE("load_so_dll: %s\n", debugstr_us(nt_name)); 
     void *module;
     NTSTATUS status;
     WINE_MODREF *wm;
@@ -2831,8 +2831,11 @@ static WINE_MODREF *build_main_module(void)
     void *module = NtCurrentTeb()->Peb->ImageBaseAddress;
 
     default_load_path = params->DllPath.Buffer;
-    if (!default_load_path)
+    TRACE("1: %s\n", debugstr_us(&params->DllPath)); 
+    if (!default_load_path) {
         get_dll_load_path( params->ImagePathName.Buffer, NULL, dll_safe_mode, &default_load_path );
+	TRACE("2: %s\n", debugstr_us(&params->ImagePathName)); 
+    }
 
     NtQueryInformationProcess( GetCurrentProcess(), ProcessImageInformation, &info, sizeof(info), NULL );
     if (info.ImageCharacteristics & IMAGE_FILE_DLL)
