@@ -2747,7 +2747,7 @@ static NTSTATUS load_native_dll( LPCWSTR load_path, const UNICODE_STRING *nt_nam
                                  const SECTION_IMAGE_INFORMATION *image_info, const struct file_id *id,
                                  DWORD flags, BOOL system, WINE_MODREF** pwm )
 {
-    TRACE("%s", debugstr_us(nt_name)); 
+    TRACE("%s\n", debugstr_us(nt_name)); 
     void *module = NULL;
     SIZE_T len = 0;
     NTSTATUS status = NtMapViewOfSection( mapping, NtCurrentProcess(), &module, 0, 0, NULL, &len,
@@ -2780,6 +2780,7 @@ static NTSTATUS load_native_dll( LPCWSTR load_path, const UNICODE_STRING *nt_nam
 static NTSTATUS load_so_dll( LPCWSTR load_path, const UNICODE_STRING *nt_name,
                              DWORD flags, WINE_MODREF **pwm )
 {
+    TRACE("%s\n", debugstr_us(nt_name)); 
     void *module;
     NTSTATUS status;
     WINE_MODREF *wm;
