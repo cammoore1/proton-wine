@@ -327,6 +327,7 @@ done:
 HMODULE WINAPI DECLSPEC_HOTPATCH GetModuleHandleA( LPCSTR module )
 {
     HMODULE ret;
+    TRACE("%s\n" debugstr_a(module));
 
     GetModuleHandleExA( GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, module, &ret );
     return ret;
@@ -351,6 +352,7 @@ HMODULE WINAPI DECLSPEC_HOTPATCH GetModuleHandleW( LPCWSTR module )
 BOOL WINAPI DECLSPEC_HOTPATCH GetModuleHandleExA( DWORD flags, LPCSTR name, HMODULE *module )
 {
     WCHAR *nameW;
+    TRACE("%s\n" debugstr_a(name));
 
     if (!name || (flags & GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS))
         return GetModuleHandleExW( flags, (LPCWSTR)name, module );
@@ -368,6 +370,8 @@ BOOL WINAPI DECLSPEC_HOTPATCH GetModuleHandleExW( DWORD flags, LPCWSTR name, HMO
     HMODULE ret = NULL;
     NTSTATUS status;
     void *dummy;
+
+    TRACE("%s\n" debugstr_w(name));
 
     if (!module)
     {
