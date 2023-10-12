@@ -962,7 +962,6 @@ SOURCES = \
 	xaudio2fx.idl \
 	xcmc.h \
 	xinput.h \
-	xinput9_1_0.h \
 	xmldom.h \
 	xmldom.idl \
 	xmldomdid.h \
