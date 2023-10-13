@@ -23,7 +23,6 @@
 #include <stdarg.h>
 #include <string.h>
 #include <stdlib.h>
-#include <unistd.h>
 
 #include "windef.h"
 #include "winbase.h"
@@ -913,7 +912,7 @@ DWORD WINAPI DECLSPEC_HOTPATCH XInputGetState(DWORD index, XINPUT_STATE *state)
     DWORD ret;
 
     TRACE("index %lu, state %p.\n", index, state);
-    sleep(5);
+    Sleep(5000);
 
     ret = xinput_get_state(index, state);
     if (ret != ERROR_SUCCESS) return ret;
