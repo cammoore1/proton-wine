@@ -857,6 +857,8 @@ BOOL WINAPI NtUserRegisterRawInputDevices( const RAWINPUTDEVICE *devices, UINT d
 
     TRACE( "devices %p, device_count %u, device_size %u.\n", devices, device_count, device_size );
 
+    return FALSE;
+
     if (device_size != sizeof(RAWINPUTDEVICE))
     {
         RtlSetLastWin32Error( ERROR_INVALID_PARAMETER );

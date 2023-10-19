@@ -912,7 +912,6 @@ DWORD WINAPI DECLSPEC_HOTPATCH XInputGetState(DWORD index, XINPUT_STATE *state)
     DWORD ret;
 
     TRACE("index %lu, state %p.\n", index, state);
-    Sleep(5000);
 
     ret = xinput_get_state(index, state);
     if (ret != ERROR_SUCCESS) return ret;
