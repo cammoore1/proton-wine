@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include <string.h>
 #include <sys/types.h>
 
 #include "ntstatus.h"
@@ -205,10 +206,24 @@ NTSTATUS WINAPI dispatch_exception( EXCEPTION_RECORD *rec, CONTEXT *context )
     else if (rec->ExceptionCode == EXCEPTION_WINE_NAME_THREAD && rec->ExceptionInformation[0] == 0x1000)
     {
         if ((DWORD)rec->ExceptionInformation[2] == -1)
+	{
+	    if (strstr((char *)rec->ExceptionInformation[1], "AsyncOpManager") != NULL)
+	    {
+		    rec->ExceptionInformation[1] = (ULONG_PTR) "changedthreadn";
+	    }
+
             WARN_(threadname)( "Thread renamed to %s\n", debugstr_a((char *)rec->ExceptionInformation[1]) );
+	}
         else
+	{
+            if (strstr((char *)rec->ExceptionInformation[1], "AsyncOpManager") != NULL)
+	    {
+		    rec->ExceptionInformation[1] = (ULONG_PTR) "changedthreadn";
+	    }
+
             WARN_(threadname)( "Thread ID %04lx renamed to %s\n", (DWORD)rec->ExceptionInformation[2],
                                debugstr_a((char *)rec->ExceptionInformation[1]) );
+	}
 
         set_native_thread_name((DWORD)rec->ExceptionInformation[2], (char *)rec->ExceptionInformation[1]);
     }
