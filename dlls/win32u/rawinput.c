@@ -857,8 +857,6 @@ BOOL WINAPI NtUserRegisterRawInputDevices( const RAWINPUTDEVICE *devices, UINT d
 
     TRACE( "devices %p, device_count %u, device_size %u.\n", devices, device_count, device_size );
 
-    return FALSE;
-
     if (device_size != sizeof(RAWINPUTDEVICE))
     {
         RtlSetLastWin32Error( ERROR_INVALID_PARAMETER );
@@ -887,13 +885,14 @@ BOOL WINAPI NtUserRegisterRawInputDevices( const RAWINPUTDEVICE *devices, UINT d
     }
 
     pthread_mutex_lock( &rawinput_mutex );
-
+    TRACE("0\n");
     if (!registered_device_count && !device_count)
     {
         pthread_mutex_unlock( &rawinput_mutex );
         return TRUE;
     }
 
+    TRACE("1\n");
     size = (SIZE_T)device_size * (registered_device_count + device_count);
     if (!(new_registered_devices = realloc( registered_devices, size )))
     {
@@ -901,10 +900,10 @@ BOOL WINAPI NtUserRegisterRawInputDevices( const RAWINPUTDEVICE *devices, UINT d
         RtlSetLastWin32Error( ERROR_OUTOFMEMORY );
         return FALSE;
     }
-
+    TRACE("2\n");
     registered_devices = new_registered_devices;
     for (i = 0; i < device_count; ++i) register_rawinput_device( devices + i );
-
+    TRACE("3\n");
     if (!(device_count = registered_device_count)) server_devices = NULL;
     else if (!(server_devices = malloc( device_count * sizeof(*server_devices) )))
     {
@@ -931,7 +930,7 @@ BOOL WINAPI NtUserRegisterRawInputDevices( const RAWINPUTDEVICE *devices, UINT d
     free( server_devices );
 
     pthread_mutex_unlock( &rawinput_mutex );
-
+    TRACE("4\n");
     return ret;
 }
 
