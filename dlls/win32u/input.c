@@ -554,6 +554,7 @@ HWND WINAPI NtUserGetForegroundWindow(void)
     }
     SHARED_READ_END( &shared->seq );
 
+    TRACE_(win)("Foreground\n");
     return ret;
 }
 
@@ -577,6 +578,8 @@ HWND get_capture(void)
 HWND get_focus(void)
 {
     GUITHREADINFO info;
+
+    TRACE_(win)("GetFocus\n");
     info.cbSize = sizeof(info);
     return NtUserGetGUIThreadInfo( GetCurrentThreadId(), &info ) ? info.hwndFocus : 0;
 }
