@@ -554,7 +554,7 @@ HWND WINAPI NtUserGetForegroundWindow(void)
     }
     SHARED_READ_END( &shared->seq );
 
-    TRACE_(win)("Foreground\n");
+    TRACE_(win)("Foreground %p\n", ret);
     return ret;
 }
 
