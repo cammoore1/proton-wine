@@ -782,11 +782,21 @@ HWND WINAPI GetFocus(void)
 {
     GUITHREADINFO info;
     HWND retValueWindow;
+    static HWND prev = 0;
 
     info.cbSize = sizeof(info);
     
     retValueWindow = NtUserGetGUIThreadInfo( GetCurrentThreadId(), &info ) ? info.hwndFocus : 0;
- 
+
+    if (retValueWindow == 0 && prev != 0)
+    {
+        retValueWindow = NtUserSetFocus(prev);
+    }
+    else 
+    {
+        prev = retValueWindow;
+    }
+
     TRACE_(rawinput)("GetFocus %p\n", retValueWindow);
 
     return retValueWindow;
