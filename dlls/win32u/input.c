@@ -1975,6 +1975,7 @@ HWND WINAPI NtUserSetFocus( HWND hwnd )
         if (!is_window( hwnd ))
         {
             RtlSetLastWin32Error( ERROR_INVALID_WINDOW_HANDLE );
+	    TRACE("Error invalid window handle\n");
             return 0;
         }
         if (hwnd == previous) return previous;  /* nothing to do */
@@ -1982,36 +1983,70 @@ HWND WINAPI NtUserSetFocus( HWND hwnd )
         {
             HWND parent;
             LONG style = get_window_long( hwndTop, GWL_STYLE );
-            if (style & (WS_MINIMIZE | WS_DISABLED)) return 0;
+            if (style & (WS_MINIMIZE | WS_DISABLED)) 
+	    {	
+		TRACE("Error disabled or minimized\n");
+	        return 0;
+	    }
             if (!(style & WS_CHILD)) break;
             parent = NtUserGetAncestor( hwndTop, GA_PARENT );
             if (!parent || parent == get_desktop_window())
             {
-                if ((style & (WS_POPUP|WS_CHILD)) == WS_CHILD) return 0;
+                if ((style & (WS_POPUP|WS_CHILD)) == WS_CHILD) 
+		{
+		    TRACE("Error popup or child\n");
+	            return 0;
+		}
                 break;
             }
-            if (parent == get_hwnd_message_parent()) return 0;
+            if (parent == get_hwnd_message_parent()) 
+	    {
+		    TRACE("Error parent == get_hwnd_message_parent\n");
+		    return 0;
+	    }
             hwndTop = parent;
         }
 
+	TRACE("call hooks\n");
         /* call hooks */
         if (call_hooks( WH_CBT, HCBT_SETFOCUS, (WPARAM)hwnd, (LPARAM)previous, 0 )) return 0;
-
+	TRACE("hwndTop\n");
         /* activate hwndTop if needed. */
         if (hwndTop != get_active_window())
         {
-            if (!set_active_window( hwndTop, NULL, FALSE, FALSE )) return 0;
-            if (!is_window( hwnd )) return 0;  /* Abort if window destroyed */
+            if (!set_active_window( hwndTop, NULL, FALSE, FALSE )) 
+	    {
+		    TRACE("Error set_active_window\n");
+		    return 0;
+	    }
+            if (!is_window( hwnd )) 
+	    {
+	        TRACE("Error is_window\n");
+		return 0;  /* Abort if window destroyed */
+	    }
 
             /* Do not change focus if the window is no longer active */
-            if (hwndTop != get_active_window()) return 0;
+            if (hwndTop != get_active_window())
+	    {
+		TRACE("Error get_active_window\n");
+                return 0;
+	    }
         }
     }
     else /* NULL hwnd passed in */
     {
-        if (!previous) return 0;  /* nothing to do */
-        if (call_hooks( WH_CBT, HCBT_SETFOCUS, 0, (LPARAM)previous, 0 )) return 0;
+        if (!previous) 
+	{
+	    TRACE("Error previous\n");
+	    return 0;  /* nothing to do */
+	}
+        if (call_hooks( WH_CBT, HCBT_SETFOCUS, 0, (LPARAM)previous, 0 )) 
+	{
+	    TRACE("Error call_hooks\n");
+            return 0;
+	}
     }
+    TRACE("Completes focus change\n");
 
     /* change focus and send messages */
     return set_focus_window( hwnd, FALSE, hwnd != previous );
