@@ -1832,12 +1832,20 @@ static BOOL set_active_window( HWND hwnd, HWND *prev, BOOL mouse, BOOL focus )
     }
 
     if (prev) *prev = previous;
-    if (win_set_flags( hwnd, WIN_IS_ACTIVATING, 0 ) & WIN_IS_ACTIVATING) return TRUE;
+    if (win_set_flags( hwnd, WIN_IS_ACTIVATING, 0 ) & WIN_IS_ACTIVATING) 
+    {
+	    TRACE("WIN_IS_ACTIVATING\n");
+	    return TRUE;
+    }
 
     /* call CBT hook chain */
     cbt.fMouse     = mouse;
     cbt.hWndActive = previous;
-    if (call_hooks( WH_CBT, HCBT_ACTIVATE, (WPARAM)hwnd, (LPARAM)&cbt, sizeof(cbt) )) return FALSE;
+    if (call_hooks( WH_CBT, HCBT_ACTIVATE, (WPARAM)hwnd, (LPARAM)&cbt, sizeof(cbt) )) 
+    {
+	    TRACE("call_hooks\n");
+	    return FALSE;
+    }
 
     if (is_window( previous ))
     {
@@ -1845,6 +1853,8 @@ static BOOL set_active_window( HWND hwnd, HWND *prev, BOOL mouse, BOOL focus )
         send_message( previous, WM_ACTIVATE,
                       MAKEWPARAM( WA_INACTIVE, is_iconic(previous) ), (LPARAM)hwnd );
     }
+
+    TRACE("SERVER_START_REQ\n");
 
     SERVER_START_REQ( set_active_window )
     {
@@ -1854,9 +1864,17 @@ static BOOL set_active_window( HWND hwnd, HWND *prev, BOOL mouse, BOOL focus )
             previous = wine_server_ptr_handle( reply->previous );
     }
     SERVER_END_REQ;
-    if (!ret) goto done;
+    if (!ret) 
+    {
+        TRACE("SERVER_END_REQ ret\n");
+	goto done;
+    }
     if (prev) *prev = previous;
-    if (previous == hwnd) goto done;
+    if (previous == hwnd) 
+    {
+	TRACE("SERVER_END_REQ previous\n");
+	goto done;
+    }
 
     if (hwnd)
     {
@@ -1864,7 +1882,11 @@ static BOOL set_active_window( HWND hwnd, HWND *prev, BOOL mouse, BOOL focus )
         if (send_message( hwnd, WM_QUERYNEWPALETTE, 0, 0 ))
             send_message_timeout( HWND_BROADCAST, WM_PALETTEISCHANGING, (WPARAM)hwnd, 0,
                                   SMTO_ABORTIFHUNG, 2000, FALSE );
-        if (!(ret = is_window(hwnd))) goto done;
+        if (!(ret = is_window(hwnd))) 
+	{
+	    TRACE("ret = is_window\n"); 
+	    goto done;
+	}
     }
 
     old_thread = previous ? get_window_thread( previous, NULL ) : 0;
@@ -1924,6 +1946,7 @@ static BOOL set_active_window( HWND hwnd, HWND *prev, BOOL mouse, BOOL focus )
     }
 
 done:
+    TRACE("done\n");
     win_set_flags( hwnd, 0, WIN_IS_ACTIVATING );
     if (ret && hwnd) clip_fullscreen_window( hwnd, FALSE );
     return ret;
