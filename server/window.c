@@ -698,7 +698,11 @@ int make_window_active( user_handle_t window )
 {
     struct window *owner, *win = get_window( window );
 
-    if (!win) return 0;
+    if (!win)
+    {
+        fprintf( stderr, "SERVER: get_window error");
+        return 0;
+    }
 
     /* set last active for window and its owners */
     owner = win;

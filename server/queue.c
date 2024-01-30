@@ -3639,8 +3639,10 @@ DECL_HANDLER(set_active_window)
     struct msg_queue *queue = get_current_queue();
     struct desktop *desktop;
 
+    fprintf( stderr, "SERVER: Entered set_active_window");
     if (!(desktop = get_thread_desktop( current, 0 ))) return;
-
+    
+    fprintf( stderr, "SERVER: Got get_thread_desktop");
     reply->previous = 0;
     if (queue && check_queue_input_window( queue, req->handle ))
     {
@@ -3657,7 +3659,15 @@ DECL_HANDLER(set_active_window)
                     if (msg->msg == req->internal_msg) remove_queue_message( queue, msg, POST_MESSAGE );
             }
         }
-        else set_error( STATUS_INVALID_HANDLE );
+        else 
+	{
+		fprintf( stderr, "SERVER: STATUS_INVALID_HANDLE");
+		set_error( STATUS_INVALID_HANDLE );
+	}
+    }
+    else
+    {
+        fprintf( stderr, "SERVER: Failed queue && check_queue_input_window");
     }
 
     release_object( desktop );
