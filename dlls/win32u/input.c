@@ -2016,7 +2016,7 @@ HWND WINAPI NtUserSetFocus( HWND hwnd )
         {
             if (!set_active_window( hwndTop, NULL, FALSE, FALSE )) 
 	    {
-		    TRACE("Error set_active_window\n");
+		    TRACE("Error set_active_window: active window :: %p\n", get_active_window());
 		    return 0;
 	    }
             if (!is_window( hwnd )) 
