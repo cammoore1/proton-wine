@@ -1509,7 +1509,7 @@ void detach_thread_input( struct thread *thread_from )
                 input->shared->focus = old_input->shared->focus;
                 SHARED_WRITE_END( &input->shared->seq );
                 SHARED_WRITE_BEGIN( &old_input->shared->seq );
-                old_input->shared->focus = 0;
+                //old_input->shared->focus = 0;
                 SHARED_WRITE_END( &old_input->shared->seq );
             }
             release_object( thread );
@@ -1522,7 +1522,7 @@ void detach_thread_input( struct thread *thread_from )
                 input->shared->active = old_input->shared->active;
                 SHARED_WRITE_END( &input->shared->seq );
                 SHARED_WRITE_BEGIN( &old_input->shared->seq );
-                old_input->shared->active = 0;
+                //old_input->shared->active = 0;
                 SHARED_WRITE_END( &old_input->shared->seq );
             }
             release_object( thread );
