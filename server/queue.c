@@ -1431,7 +1431,7 @@ static int check_queue_input_window( struct msg_queue *queue, user_handle_t wind
 
     if ((thread = get_window_thread( window )))
     {
-	fprintf( stderr, "check_queue_input_window %d\n", queue->input == thread->queue_input);
+	fprintf( stderr, "check_queue_input_window %d\n", queue->input == thread->queue->input);
         ret = (queue->input == thread->queue->input);
         if (!ret) 
 	{
