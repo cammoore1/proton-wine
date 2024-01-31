@@ -1423,12 +1423,21 @@ static int check_queue_input_window( struct msg_queue *queue, user_handle_t wind
     struct thread *thread;
     int ret = 0;
 
-    if (!window) return 1;  /* we can always clear the data */
+    if (!window) 
+    {
+	    fprintf( stderr, "check_queue_input_window window does not exist\n");
+	    return 1;  /* we can always clear the data */
+    }
 
     if ((thread = get_window_thread( window )))
     {
+	fprintf( stderr, "check_queue_input_window %d\n", queue->input == thread->queue_input);
         ret = (queue->input == thread->queue->input);
-        if (!ret) set_error( STATUS_ACCESS_DENIED );
+        if (!ret) 
+	{
+		fprintf( stderr, "check_queue_input_window STATUS_ACCESS_DENIED\n");
+		set_error( STATUS_ACCESS_DENIED );
+	}
         release_object( thread );
     }
     else set_error( STATUS_INVALID_HANDLE );
@@ -3639,10 +3648,10 @@ DECL_HANDLER(set_active_window)
     struct msg_queue *queue = get_current_queue();
     struct desktop *desktop;
 
-    fprintf( stderr, "SERVER: Entered set_active_window");
+    fprintf( stderr, "SERVER: Entered set_active_window\n");
     if (!(desktop = get_thread_desktop( current, 0 ))) return;
     
-    fprintf( stderr, "SERVER: Got get_thread_desktop");
+    fprintf( stderr, "SERVER: Got get_thread_desktop\n");
     reply->previous = 0;
     if (queue && check_queue_input_window( queue, req->handle ))
     {
@@ -3661,13 +3670,17 @@ DECL_HANDLER(set_active_window)
         }
         else 
 	{
-		fprintf( stderr, "SERVER: STATUS_INVALID_HANDLE");
+		if (!queue)
+		{
+		    fprintf( stderr, "SERVER: queue missing\n");
+		}
+		fprintf( stderr, "SERVER: STATUS_INVALID_HANDLE\n");
 		set_error( STATUS_INVALID_HANDLE );
 	}
     }
     else
     {
-        fprintf( stderr, "SERVER: Failed queue && check_queue_input_window");
+        fprintf( stderr, "SERVER: Failed queue && check_queue_input_window\n");
     }
 
     release_object( desktop );
