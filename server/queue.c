@@ -1498,6 +1498,7 @@ void detach_thread_input( struct thread *thread_from )
     struct thread *thread;
     struct thread_input *input, *old_input = thread_from->queue->input;
 
+    fprintf( stderr, "detach_thread_input detaching\n");
     if ((input = create_thread_input( thread_from )))
     {
         if (old_input->shared->focus && (thread = get_window_thread( old_input->shared->focus )))
