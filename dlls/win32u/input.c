@@ -591,6 +591,7 @@ BOOL WINAPI NtUserAttachThreadInput( DWORD from, DWORD to, BOOL attach )
 {
     BOOL ret;
 
+    TRACE_(win)("from:%lu to:%lu attach:%d\n", from, to, attach);
     SERVER_START_REQ( attach_thread_input )
     {
         req->tid_from = from;
