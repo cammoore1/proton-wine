@@ -30,6 +30,7 @@
 #pragma makedep unix
 #endif
 
+#include "hackThreadInput.h"
 #include "ntstatus.h"
 #define WIN32_NO_STATUS
 #include "win32u_private.h"
