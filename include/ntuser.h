@@ -62,6 +62,10 @@ enum
     NtUserCallCount
 };
 
+/* Hack for dragon age inquisition variables */
+extern DWORD fromThreadForHack;
+extern DWORD toThreadForHack;
+
 /* TEB thread info, not compatible with Windows */
 struct ntuser_thread_info
 {

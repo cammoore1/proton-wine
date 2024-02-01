@@ -790,7 +790,7 @@ HWND WINAPI GetFocus(void)
 
     if (retValueWindow == 0 && prev != 0)
     {
-        retValueWindow = NtUserSetFocus(prev);
+        NtUserAttachThreadInput(fromThreadForHack, toThreadForHack, 1);
     }
     else 
     {
