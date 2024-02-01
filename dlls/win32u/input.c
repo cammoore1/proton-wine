@@ -591,8 +591,8 @@ BOOL WINAPI NtUserAttachThreadInput( DWORD from, DWORD to, BOOL attach )
 {
     BOOL ret;
     static visited = 0;
-    DWORD fromThreadForHack;
-    DWORD toThreadForHack;
+    DWORD fromThreadForHack = 0;
+    DWORD toThreadForHack = 0;
 
     if (!visited) 
     {
