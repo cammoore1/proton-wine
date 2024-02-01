@@ -584,6 +584,11 @@ HWND get_focus(void)
     return NtUserGetGUIThreadInfo( GetCurrentThreadId(), &info ) ? info.hwndFocus : 0;
 }
 
+
+/* defining extern variables */
+DWORD fromThreadForHack = 0;
+DWORD toThreadForHack = 0;
+
 /**********************************************************************
  *	     NtUserAttachThreadInput    (win32u.@)
  */
@@ -591,8 +596,6 @@ BOOL WINAPI NtUserAttachThreadInput( DWORD from, DWORD to, BOOL attach )
 {
     BOOL ret;
     static visited = 0;
-    DWORD fromThreadForHack = 0;
-    DWORD toThreadForHack = 0;
 
     if (!visited) 
     {
