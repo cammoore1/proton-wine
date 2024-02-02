@@ -309,9 +309,9 @@ static struct thread_input *create_thread_input( struct thread *thread )
         input->shared_mapping = grab_object( thread->input_shared_mapping );
         input->shared = thread->input_shared;
         SHARED_WRITE_BEGIN( &input->shared->seq );
-        //input->shared->focus        = 0;
-        //input->shared->capture      = 0;
-        //input->shared->active       = 0;
+        input->shared->focus        = 0;
+        input->shared->capture      = 0;
+        input->shared->active       = 0;
         input->shared->menu_owner   = 0;
         input->shared->move_size    = 0;
         input->shared->cursor       = 0;

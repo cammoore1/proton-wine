@@ -603,6 +603,7 @@ BOOL WINAPI NtUserAttachThreadInput( DWORD from, DWORD to, BOOL attach )
 	fromThreadForHack = from;
 	toThreadForHack = to;
 	visited = 1;
+	TRACE_(win)("fromThreadForHack: %lu toThreadForHack: %lu\n", fromThreadForHack, toThreadForHack);
     }
 
     TRACE_(win)("from:%lu to:%lu attach:%d\n", from, to, attach);

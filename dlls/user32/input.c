@@ -775,6 +775,8 @@ HWND WINAPI GetActiveWindow(void)
     return NtUserGetGUIThreadInfo( GetCurrentThreadId(), &info ) ? info.hwndActive : 0;
 }
 
+DWORD fromThreadForHack = 0;
+DWORD toThreadForHack = 0;
 
 /*****************************************************************
  *           GetFocus  (USER32.@)
@@ -791,7 +793,9 @@ HWND WINAPI GetFocus(void)
 
     if (retValueWindow == 0 && prev != 0)
     {
-        NtUserAttachThreadInput(fromThreadForHack, toThreadForHack, 1);
+	TRACE_(rawinput)("fromThreadForHack: %lu toThreadForHack: %lu\n", fromThreadForHack, toThreadForHack);
+        int retAttachThreadInput = NtUserAttachThreadInput(fromThreadForHack, toThreadForHack, 1);
+	TRACE_(rawinput)("AttachThreadInput: %d\n", retAttachThreadInput);
     }
     else 
     {
