@@ -28,7 +28,6 @@
 #include "dbt.h"
 #include "wine/server.h"
 #include "wine/debug.h"
-#include "../win32u/hackThreadInput.h"
 
 WINE_DEFAULT_DEBUG_CHANNEL(win);
 WINE_DECLARE_DEBUG_CHANNEL(keyboard);
@@ -790,8 +789,7 @@ HWND WINAPI GetFocus(void)
 
     if (retValueWindow == 0 && prev != 0)
     {
-	TRACE_(rawinput)("fromThreadForHack: %lu toThreadForHack: %lu\n", GetFromThreadForHack(), GetToThreadForHack());
-        int retAttachThreadInput = NtUserAttachThreadInput(GetFromThreadForHack(), GetToThreadForHack(), 1);
+        int retAttachThreadInput = NtUserAttachThreadInput(0, 0, 1);
 	TRACE_(rawinput)("AttachThreadInput: %d\n", retAttachThreadInput);
     }
     else 

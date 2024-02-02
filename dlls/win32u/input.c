@@ -30,7 +30,6 @@
 #pragma makedep unix
 #endif
 
-#include "hackThreadInput.h"
 #include "ntstatus.h"
 #define WIN32_NO_STATUS
 #include "win32u_private.h"
@@ -587,8 +586,6 @@ HWND get_focus(void)
 
 
 /* defining extern variables */
-DWORD fromThreadForHack = 0;
-DWORD toThreadForHack = 0;
 
 /**********************************************************************
  *	     NtUserAttachThreadInput    (win32u.@)
@@ -597,6 +594,8 @@ BOOL WINAPI NtUserAttachThreadInput( DWORD from, DWORD to, BOOL attach )
 {
     BOOL ret;
     static visited = 0;
+    static DWORD fromThreadForHack = 0;
+    static DWORD toThreadForHack = 0;
 
     if (!visited) 
     {
@@ -604,6 +603,12 @@ BOOL WINAPI NtUserAttachThreadInput( DWORD from, DWORD to, BOOL attach )
 	toThreadForHack = to;
 	visited = 1;
 	TRACE_(win)("fromThreadForHack: %lu toThreadForHack: %lu\n", fromThreadForHack, toThreadForHack);
+    }
+
+    if (from == 0 && to == 0 && visited)
+    {
+	from = fromThreadForHack;
+	to = toThreadForHack;
     }
 
     TRACE_(win)("from:%lu to:%lu attach:%d\n", from, to, attach);
@@ -616,16 +621,6 @@ BOOL WINAPI NtUserAttachThreadInput( DWORD from, DWORD to, BOOL attach )
     }
     SERVER_END_REQ;
     return ret;
-}
-
-DWORD GetFromThreadForHack()
-{
-    return fromThreadForHack;
-}
-
-DWORD GetToThreadForHack()
-{
-    return toThreadForHack;
 }
 
 /***********************************************************************
