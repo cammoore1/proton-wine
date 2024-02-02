@@ -6,5 +6,7 @@
 extern DWORD fromThreadForHack;
 extern DWORD toThreadForHack;
 
+DWORD GetFromThreadForHack();
+DWORD GetToThreadForHack();
 
 #endif

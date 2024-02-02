@@ -618,6 +618,16 @@ BOOL WINAPI NtUserAttachThreadInput( DWORD from, DWORD to, BOOL attach )
     return ret;
 }
 
+DWORD GetFromThreadForHack()
+{
+    return fromThreadForHack;
+}
+
+DWORD GetToThreadForHack()
+{
+    return toThreadForHack;
+}
+
 /***********************************************************************
  *           __wine_send_input  (win32u.@)
  *
