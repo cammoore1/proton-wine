@@ -28,7 +28,7 @@
 #include "dbt.h"
 #include "wine/server.h"
 #include "wine/debug.h"
-#include "hackThreadInput.h"
+#include "../win32u/hackThreadInput.h"
 
 WINE_DEFAULT_DEBUG_CHANNEL(win);
 WINE_DECLARE_DEBUG_CHANNEL(keyboard);
