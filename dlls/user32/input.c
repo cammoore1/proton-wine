@@ -780,8 +780,19 @@ HWND WINAPI GetActiveWindow(void)
 HWND WINAPI GetFocus(void)
 {
     GUITHREADINFO info;
+    HWND retValueWindow;
+    static HWND prev = 0;
+
     info.cbSize = sizeof(info);
-    return NtUserGetGUIThreadInfo( GetCurrentThreadId(), &info ) ? info.hwndFocus : 0;
+
+    retValueWindow = NtUserGetGUIThreadInfo( GetCurrentThreadId(), &info ) ? info.hwndFocus : 0;
+
+    if (retValueWindow == 0 && prev != 0)
+        NtUserAttachThreadInput(0, 0, 1);
+    else
+        prev = retValueWindow;
+
+    return retValueWindow;
 }
 
 
